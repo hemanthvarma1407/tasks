@@ -1,0 +1,23 @@
+---
+- hosts: dev
+  user: ansible
+  become: yes
+  connection: ssh
+
+  tasks:
+    - name: install httpd
+      command: yum install httpd -y
+      notify: restart httpd
+
+    - name: install git
+      command: yum install git -y
+
+    - name: copy code
+      git:
+        repo: "https://github.com/hemanthvarma1407/staticsite-docker.git"
+        dest: "/var/www/html/index.html"
+
+  handlers:
+    - name: restart httpd
+      service: name=httpd state=restarted
+...
